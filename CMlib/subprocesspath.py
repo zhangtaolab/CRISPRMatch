@@ -11,3 +11,6 @@ def subprocesspath(path):
     rpath = '\''+ os.path.abspath(path)+'\''
 
     return rpath
+
+def testfun():
+    pass
