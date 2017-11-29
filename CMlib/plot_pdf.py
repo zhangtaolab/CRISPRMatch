@@ -69,7 +69,7 @@ def caldel(samfilename, start, end, genename):
 
     mutateinforpd = pd.DataFrame.from_dict(mutateinfor, orient='index').fillna(value=0)
     mutateinforpd['sum'] = mutateinforpd.sum(axis=1)
-    mutateinforpd['delrate'] = mutateinforpd[2] / mutateinforpd['sum']
+    mutateinforpd['delrate'] = mutateinforpd[2]/mutateinforpd['sum']
     deletelentpd = pd.DataFrame.from_dict(deletelent, orient='index')
 
     return (mutateinforpd, deletelentpd)
@@ -97,6 +97,7 @@ def plotpdf(groupinfo, refname, output, bamdir):
                 end = groupinfor.loc[idx]['end']
         genename = groupinfor.loc[idx]['gene']
         namenow = groupinfor.loc[idx]['group']
+
 
         if (path.exists(repbam1) and path.exists(repbam2)) and path.exists(ckbam):
 
@@ -131,6 +132,7 @@ def plotpdf(groupinfo, refname, output, bamdir):
             ax0.set_xticks(regmean.index)
             ax0.set_xticklabels(seqlist)
             ax0.tick_params(labelsize=8)
+
 
             ckname = namenow + ' Control'
             pdfname = os.path.join(output, namenow + '.pdf')

@@ -109,6 +109,7 @@ def display(groupinfo, output):
     mutfile = os.path.join(output, 'mut_rate.txt')
     mut_rate = pd.read_table(mutfile, sep='\t')
     groupinfor = pd.read_table(groupinfo)
+    groupinfor = groupinfor.dropna(axis=0, how='any')
     mut_result = dict()
     for idx in mut_rate.index:
         mut_result[mut_rate.loc[idx].Sample] = mut_rate.values[idx]  ##读入mutation信息
