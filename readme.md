@@ -75,7 +75,7 @@ For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.
 *note*: At present, two repeats are supported<br>
 *example*:</br>
 [group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)  
-**note**: the information files **File1**, **File2** and **File3** are required!  
+- **note**: the information files **File1**, **File2** and **File3** are required!  
 </br>
 2. command line example:</br>
 
