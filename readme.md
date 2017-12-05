@@ -9,7 +9,7 @@ picard</br>
 
 ## Getting Start
 1. Install Anaconda, version python3+  
-[Anaconda link](https://www.anaconda.com/download/)  
+[Anaconda link](https://www.anaconda.com/download/) 
 [other mirror](https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/)
 
 2. Install required softwares  
@@ -31,8 +31,7 @@ For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.
 *example*:  
 [sample information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/sample_infor.txt)  
 - File3: NGS group information  
-*note*: At present, two repeats are supported  
-</br>
+*note*: At present, two repeats are supported<br></br>
 *example*:  
 [group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)
 
