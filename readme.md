@@ -16,8 +16,6 @@ $ mkdir /home/software</br>
 $ cd /home/software</br>
 $ wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh</br>
 $ bash Anaconda3-5.0.1-Linux-x86_64.sh</br>
-[Anaconda link](https://www.anaconda.com/download/)</br>
-[other mirror](https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/)
 
 2. Install dependent package  
 $ conda install bwa \  
