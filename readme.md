@@ -34,7 +34,8 @@ $ cd /home/software</br>
 $ git clone https://github.com/zhangtaolab/CRISPRMatch.git</br>
 $ python3 /home/software/CRISPRMatch/CRISPRMatch.py -h</br>
 
-```usage: CRISPRMatch [-h] [--version] [-b BWA] [-sm SAMTOOLS] [-pi PICARD] -g
+```
+usage: CRISPRMatch [-h] [--version] [-b BWA] [-sm SAMTOOLS] [-pi PICARD] -g
                    GENOME -i INPUT -gi GROUPINFO [-s SAVED] [-r RESULT]
                    [-t THREADS] [--docker DOCKER]
 
@@ -79,4 +80,6 @@ For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.
 **note**: the information files **File1**, **File2** and **File3** are required!  
 </br>
 2. command line example:   
-*python CRISPRMatch.py -g document/Samples_gene.fa -i document/sample_infor.txt -gi document/group_info.txt*
+```
+python CRISPRMatch.py -g document/Samples_gene.fa -i document/sample_infor.txt -gi document/group_info.txt
+```
