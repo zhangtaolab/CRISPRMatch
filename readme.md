@@ -79,7 +79,7 @@ For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.
 [group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)  
 **note**: the information files **File1**, **File2** and **File3** are required!  
 </br>
-2. command line example:   
+2. command line example:</br>
 ```
 python CRISPRMatch.py -g document/Samples_gene.fa -i document/sample_infor.txt -gi document/group_info.txt
 ```
