@@ -33,27 +33,34 @@ numpy \
 $ cd /home/software</br>
 $ git clone https://github.com/zhangtaolab/CRISPRMatch.git</br>
 $ python3 /home/software/CRISPRMatch/CRISPRMatch.py -h</br>
->usage: CRISPRMatch [-h] [--version] [-b BWA] [-sm SAMTOOLS] [-pi PICARD]</br>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;-g
-                   GENOME -i INPUT -gi GROUPINFO [-s SAVED] [-r RESULT]
-                   &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[-t THREADS]</br>
-CRISPRMatch is for location finding</br>
-optional arguments:</br> 
-&emsp;&emsp;-h, --help            &emsp;&emsp;show this help message and exit  
-&emsp;&emsp;--version             &emsp;&emsp;show program's version number and exit  
-&emsp;&emsp;-b BWA, --bwa BWA     bwa path  
-&emsp;&emsp;-sm SAMTOOLS, --samtools SAMTOOLS        samtools path  
-&emsp;&emsp;-pi PICARD, --picard PICARD              picard path  
-&emsp;&emsp;-g GENOME, --genome GENOME               fasta format genome file  
-&emsp;&emsp;-i INPUT, --input INPUT                  sample information input file  
-&emsp;&emsp;-gi GROUPINFO, --groupinfo GROUPINFO     group information input file  
-&emsp;&emsp;-s SAVED, --save SAVED                   tmp saved folder  
-&emsp;&emsp;-r RESULT, --result RESULT               result saved folder  
-&emsp;&emsp;-t THREADS, --threads THREADS            threads number or how may cpu you wanna use  
 
-`usage: CRISPRMatch [-h] [--version] [-b BWA] [-sm SAMTOOLS] [-pi PICARD] -g
-        GENOME -i INPUT -gi GROUPINFO [-s SAVED] [-r RESULT]
-        [-t THREADS] [--docker DOCKER]`
+```usage: CRISPRMatch [-h] [--version] [-b BWA] [-sm SAMTOOLS] [-pi PICARD] -g
+                   GENOME -i INPUT -gi GROUPINFO [-s SAVED] [-r RESULT]
+                   [-t THREADS] [--docker DOCKER]
+
+CRISPRMatch is for location finding
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -b BWA, --bwa BWA     bwa path
+  -sm SAMTOOLS, --samtools SAMTOOLS
+                        samtools path
+  -pi PICARD, --picard PICARD
+                        picard path
+  -g GENOME, --genome GENOME
+                        fasta format genome file
+  -i INPUT, --input INPUT
+                        sample information input file
+  -gi GROUPINFO, --groupinfo GROUPINFO
+                        group information input file
+  -s SAVED, --save SAVED
+                        tmp saved folder
+  -r RESULT, --result RESULT
+                        result saved folder
+  -t THREADS, --threads THREADS
+                        threads number or how may cpu you wanna use
+```
 
 ## Start running
 1. Files for mutation calculation  
