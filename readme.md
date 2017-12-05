@@ -52,8 +52,8 @@ optional arguments:</br>
 &emsp;&emsp;-t THREADS, --threads THREADS            threads number or how may cpu you wanna use  
 
 `usage: CRISPRMatch [-h] [--version] [-b BWA] [-sm SAMTOOLS] [-pi PICARD] -g
-                   GENOME -i INPUT -gi GROUPINFO [-s SAVED] [-r RESULT]
-                   [-t THREADS] [--docker DOCKER]`
+        GENOME -i INPUT -gi GROUPINFO [-s SAVED] [-r RESULT]
+        [-t THREADS] [--docker DOCKER]`
 
 ## Start running
 1. Files for mutation calculation  
