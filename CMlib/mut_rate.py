@@ -9,9 +9,26 @@ import numpy as np
 import re
 from glob import glob
 
-def rate_cal(infofile, refname, output, bamdir):
+def rate_cal(infofile, groupinfo, refname, output, bamdir):
+    """
+
+    :param infofile: a description file of details of each sample, example: sample_infor.txt
+    :param groupinfo: a description file of details of each group, example: group_infor.txt
+    :param refname: a fasta format of the sequence in the target region, exaple:Samples_gene.fa
+    :param output: folder of final result
+    :param bamdir: folder of temporary files
+    :return:
+    """
+
 
     info=pd.read_table(infofile,index_col="Index")
+    groupinfor = pd.read_table(groupinfo)
+    stranddict = dict()
+    for idy in groupinfor.index:
+        stranddict[groupinfor.loc[idy].rep1] = groupinfor.loc[idy].strand
+        stranddict[groupinfor.loc[idy].rep2] = groupinfor.loc[idy].strand
+        stranddict[groupinfor.loc[idy].control] = groupinfor.loc[idy].strand
+
     outputname = os.path.join(output, 'mut_rate.txt')
     outio = open(outputname, "w")
     fa = Fasta(refname)
@@ -23,13 +40,36 @@ def rate_cal(infofile, refname, output, bamdir):
         #    print(info.loc[idx].Note, info.loc[idx].gene_name, info.loc[idx].start, info.loc[idx].end)
         bamname =  os.path.join(bamdir, info.loc[idx].Note+'.bam')
         print("Calculating",bamname)
+
+        note = info.loc[idx].Note
+        strand = stranddict[note]
+
         if (re.search("gRNA", info.loc[idx].Note)):
-            start = info.loc[idx].start - 10
-            end = info.loc[idx].end + 10
-        # print(info.loc[idx].Note, "orignal-start",info.loc[idx].start, "after:",start, "orignal-end",info.loc[idx].end, "after:",end)
+            if strand == '+':
+                start = info.loc[idx]['start'] - 10
+                end = info.loc[idx]['end'] + 10
+
+            else:
+                start = info.loc[idx]['start'] - 10
+                end = info.loc[idx]['end'] + 10
+
         elif (re.search("crRNA", info.loc[idx].Note)):
-            start = info.loc[idx].start
-            end = info.loc[idx].end + 30
+            if strand == '+':
+                start = info.loc[idx]['start']
+                end = info.loc[idx]['end'] + 30
+
+            else:
+                start = info.loc[idx]['start'] - 30
+                end = info.loc[idx]['end']
+
+
+        # if (re.search("gRNA", info.loc[idx].Note)):
+        #     start = info.loc[idx].start - 10
+        #     end = info.loc[idx].end + 10
+        # # print(info.loc[idx].Note, "orignal-start",info.loc[idx].start, "after:",start, "orignal-end",info.loc[idx].end, "after:",end)
+        # elif (re.search("crRNA", info.loc[idx].Note)):
+        #     start = info.loc[idx].start
+        #     end = info.loc[idx].end + 30
         # print(info.loc[idx].Note, "orignal-start",info.loc[idx].start, "after:",start, "orignal-end",info.loc[idx].end, "after:",end)
         #    start = info.loc[idx].start
         #    end = info.loc[idx].end
@@ -105,11 +145,18 @@ def rate_cal(infofile, refname, output, bamdir):
     outio.close()
 
 def display(groupinfo, output):
+    """
+    :param groupinfo: a description file of details of each group, example: group_infor.txt
+    :param output: folder of final result
+    :return:
+    """
 
     mutfile = os.path.join(output, 'mut_rate.txt')
     mut_rate = pd.read_table(mutfile, sep='\t')
     groupinfor = pd.read_table(groupinfo)
-    groupinfor = groupinfor.dropna(axis=0, how='any')
+    groupinfor = groupinfor.dropna(axis=0, how='any',thresh=7)  ##过滤表哥中没填满的行，thresh=7表示至少7个数不是NA
+    #groupinfor.ix[:,pd.isnull(groupinfor).all()] = "UNKNOWN"
+    groupinfor=groupinfor.fillna("UNKNOWN") ##填充表格中NaN处
     mut_result = dict()
     for idx in mut_rate.index:
         mut_result[mut_rate.loc[idx].Sample] = mut_rate.values[idx]  ##读入mutation信息
@@ -141,25 +188,38 @@ def display(groupinfo, output):
         replace_std = np.std([mut_result[rep1][2], mut_result[rep2][2]])  ## 标准差
         #    print("std", group_var)
         replace_yerr.append(replace_std)
-        ck_replace.append(mut_result[ck][2])
+
+        if ck=='UNKNOWN':
+            ck_replace.append(0)
+        else:
+            ck_replace.append(mut_result[ck][2])
 
         insertO_mean = np.mean([mut_result[rep1][3], mut_result[rep2][3]])
         insertO.append(insertO_mean)
         insertO_std = np.std([mut_result[rep1][3], mut_result[rep2][3]])
         insertO_yerr.append(insertO_std)
-        ck_insertO.append(mut_result[ck][3])
+        if(ck =='UNKNOWN'):
+            ck_insertO.append(0)
+        else:
+            ck_insertO.append(mut_result[ck][3])
 
         deletionO_mean = np.mean([mut_result[rep1][4], mut_result[rep2][4]])
         deletionO.append(deletionO_mean)
         deletionO_std = np.std([mut_result[rep1][4], mut_result[rep2][4]])
         deletionO_yerr.append(deletionO_std)
-        ck_deletionO.append(mut_result[ck][4])
+        if(ck=='UNKNOWN'):
+            ck_deletionO.append(0)
+        else:
+            ck_deletionO.append(mut_result[ck][4])
 
         insert_deletion_mean = np.mean([mut_result[rep1][5], mut_result[rep2][5]])
         insert_deletion.append(insert_deletion_mean)
         insert_deletion_std = np.std([mut_result[rep1][5], mut_result[rep2][5]])
         insert_deletion_yerr.append(insert_deletion_std)
-        ck_insert_deletion.append(mut_result[ck][5])
+        if(ck =='UNKNOWN'):
+            ck_insert_deletion.append(0)
+        else:
+            ck_insert_deletion.append(mut_result[ck][5])
 
         glist.append(groupinfor.loc[idy].group)
         ck_glist.append(groupinfor.loc[idy].control)
@@ -170,29 +230,37 @@ def display(groupinfo, output):
     fig, (ax0, ax1) = plt.subplots(ncols=2, sharey=True)
     fig.set_size_inches(20, 9)
     width = 0.15
-    bar1 = ax0.bar(groupinfor.index, replace, width, color='pink', yerr=replace_yerr, linewidth=0.5, capsize=1.5)
-    bar2 = ax0.bar(groupinfor.index + width, insertO, width, color='green', yerr=insertO_yerr, linewidth=0.5,
-                   capsize=1.5)
-    bar3 = ax0.bar(groupinfor.index + width * 2, deletionO, width, color='blue', yerr=deletionO_yerr, linewidth=0.5,
-                   capsize=1.5)
-    bar4 = ax0.bar(groupinfor.index + width * 3, insert_deletion, width, color='orange', yerr=insert_deletion_yerr,
-                   linewidth=0.5, capsize=1.5)
+    bar1 = ax0.bar(groupinfor.index, replace, width, color="#CC79A7")
+    #bar1 = ax0.bar(groupinfor.index, replace, width, color='pink', yerr=replace_yerr, elinewidth=0.1, capsize=1.5)
+    ax0.errorbar(groupinfor.index, replace, yerr=replace_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
+    bar2 = ax0.bar(groupinfor.index + width, insertO, width, color="#D55E00")
+    #bar2 = ax0.bar(groupinfor.index + width, insertO, width, color='green', yerr=insertO_yerr, linewidth=0.5,capsize=1.5)
+    ax0.errorbar(groupinfor.index+ width, insertO, yerr=insertO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
+    #bar3 = ax0.bar(groupinfor.index + width * 2, deletionO, width, color='blue', yerr=deletionO_yerr, linewidth=0.5,capsize=1.5)
+    bar3 = ax0.bar(groupinfor.index + width * 2, deletionO, width, color="#0072B2")
+    ax0.errorbar(groupinfor.index + width * 2, deletionO, yerr=deletionO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5,ls='None', ecolor='black')
+    bar4 = ax0.bar(groupinfor.index + width * 3, insert_deletion, width, color="#009E73")
+    #bar4 = ax0.bar(groupinfor.index + width * 3, insert_deletion, width, color='orange', yerr=insert_deletion_yerr,linewidth=0.5, capsize=1.5)
+    ax0.errorbar(groupinfor.index + width * 3, insert_deletion, yerr=insert_deletion_yerr, fmt='', elinewidth=0.5, capsize=2,capthick=0.5,ls='None', ecolor='black')
+
     # ax.bar(reg.index, reg.delrate, color='blue')
-    ax0.set_title('Treatment', size=15)
-    ax0.set_ylabel('All Mutation (%)', size=15)
+    ax0.set_title('Treatment', size=15,fontdict = {'family': 'Times New Roman'})
+    ax0.set_ylabel('All Mutation (%)', size=15,fontdict = {'family': 'Times New Roman'})
     ax0.set_xticks(groupinfor.index + 1.5 * width)
-    ax0.set_xticklabels(glist, rotation=35, size=6)
+    #ax0.set_xticklabels(glist, rotation=35, size=6)
+    ax0.set_xticklabels(glist, rotation=35, fontdict = {'family': 'Arial'}, size = 5)
     ax0.legend((bar1[0], bar2[0], bar3[0], bar4[0]), ('replace', 'insert_only', 'deletion_only', 'insert&&deletion'))
 
-    bar5 = ax1.bar(groupinfor.index, ck_replace, width, color='pink')
-    bar6 = ax1.bar(groupinfor.index + width, ck_insertO, width, color='green')
-    bar7 = ax1.bar(groupinfor.index + width * 2, ck_deletionO, width, color='blue')
-    bar8 = ax1.bar(groupinfor.index + width * 3, ck_insert_deletion, width, color='orange')
+    bar5 = ax1.bar(groupinfor.index, ck_replace, width, color="#CC79A7")
+    bar6 = ax1.bar(groupinfor.index + width, ck_insertO, width, color="#D55E00")
+    bar7 = ax1.bar(groupinfor.index + width * 2, ck_deletionO, width, color="#0072B2")
+    bar8 = ax1.bar(groupinfor.index + width * 3, ck_insert_deletion, width, color="#009E73")
     # ax.bar(reg.index, reg.delrate, color='blue')
-    ax1.set_title('Coontrol', size=15)
-    ax1.set_ylabel('All Mutation (%)', size=15)
+    ax1.set_title('Control', size=15,fontdict = {'family': 'Times New Roman'})
+    ax1.set_ylabel('All Mutation (%)', size=15,fontdict = {'family': 'Times New Roman'})
     ax1.set_xticks(groupinfor.index + 1.5 * width)
-    ax1.set_xticklabels(ck_glist, rotation=35, size=6)
+    #ax1.set_xticklabels(ck_glist, rotation=35, size=6)
+    ax1.set_xticklabels(ck_glist, rotation=35, fontdict = {'family': 'Arial'}, size = 5)
     ax1.legend((bar5[0], bar6[0], bar7[0], bar8[0]), ('replace', 'insert_only', 'deletion_only', 'insert&&deletion'))
     # plt.show()
     plt.savefig(mutfile, dpi=300, format="pdf")

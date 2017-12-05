@@ -88,7 +88,7 @@ def main():
 
     # ?mutation ration calculation
     print("## Step 3:")
-    mut_rate.rate_cal(args.input, args.genome, args.result, args.saved)
+    mut_rate.rate_cal(args.input, args.groupinfo, args.genome, args.result, args.saved)
     print("Mutation calculation finished!")
     # end mutation
 
@@ -101,7 +101,7 @@ def main():
 
     # ?output aln and fa file
     print("## Step 4:")
-    output_aln_fa.alnfile(args.input, args.genome, args.result, args.saved)
+    output_aln_fa.alnfile(args.input, args.groupinfo, args.genome, args.result, args.saved)
     print("Alignment files were output!")
     # end output aln and fa file
 
@@ -116,7 +116,7 @@ def main():
     # ?plot each bam
     print("## Step 5:")
     print("Starting to plot each bam...")
-    plot_each_bam.barchart(args.input, args.genome, args.result, args.saved)
+    plot_each_bam.barchart(args.input, args.groupinfo,args.genome, args.result, args.saved)
     print("plot each bam finished!")
     # end plot each bam
 

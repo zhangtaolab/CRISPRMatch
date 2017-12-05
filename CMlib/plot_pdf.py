@@ -12,6 +12,14 @@ import os
 
 
 def caldel(samfilename, start, end, genename):
+    """
+
+    :param samfilename: path and name of each bam file
+    :param start: setting the start site of deletion calculation
+    :param end: setting the end site of deletion calculation
+    :param genename: the name of genome-editing target region
+    :return:
+    """
     n = 0
 
     mutateinfor = dict()
@@ -75,6 +83,16 @@ def caldel(samfilename, start, end, genename):
     return (mutateinforpd, deletelentpd)
 
 def plotpdf(groupinfo, refname, output, bamdir):
+
+    """
+
+    :param groupinfo: a description file of details of each group, example: group_infor.txt
+    :param refname: a fasta format of the sequence in the target region, exaple:Samples_gene.fa
+    :param output: folder of final result
+    :param bamdir: folder of temporary files
+    :return:
+    """
+
     groupinfor = pd.read_table(groupinfo)
     groupinfor = groupinfor.dropna(axis=0, how='any')
     fa = Fasta(refname)
@@ -85,16 +103,26 @@ def plotpdf(groupinfo, refname, output, bamdir):
         repbam2 = os.path.join(bamdir, groupinfor.loc[idx]['rep2'] + '.bam')
         ckbam = os.path.join(bamdir, groupinfor.loc[idx]['control'] + '.bam')
         strand = groupinfor.loc[idx]['strand']
+        type = ''
         if (re.search("gRNA", groupinfor.loc[idx]['group'])):
-            start = groupinfor.loc[idx]['start'] - 10
-            end = groupinfor.loc[idx]['end'] + 10
+            if strand == '+':
+                start = groupinfor.loc[idx]['start'] - 10
+                end = groupinfor.loc[idx]['end'] + 10
+                type = 'gf'
+            else:
+                start = groupinfor.loc[idx]['start'] - 10
+                end = groupinfor.loc[idx]['end'] + 10
+                type = 'gr'
+
         elif (re.search("crRNA", groupinfor.loc[idx]['group'])):
             if strand == '+':
                 start = groupinfor.loc[idx]['start']
                 end = groupinfor.loc[idx]['end'] + 30
+                type = 'cf'
             else:
                 start = groupinfor.loc[idx]['start'] - 30
                 end = groupinfor.loc[idx]['end']
+                type = 'cr'
         genename = groupinfor.loc[idx]['gene']
         namenow = groupinfor.loc[idx]['group']
 
@@ -122,6 +150,31 @@ def plotpdf(groupinfo, refname, output, bamdir):
 
             (mutateinforpdCK, deletelentpdCK) = caldel(samfilename=ckbam, start=start, end=end, genename=genename)
 
+            seqlistPAM = list()
+            seqlistother = list()
+            regPAM = list()
+            if type == 'gf':
+                seqlistPAM = seqlist[-13:-10]
+                seqlistother = seqlist
+                seqlistother[-13:-10] = ['', '', '']
+                regPAM = regmean[-13:-10]
+            if type == 'gr':
+                seqlistPAM = seqlist[10:13]
+                seqlistother = seqlist
+                seqlistother[10:13] = ['', '', '']
+                regPAM = regmean[10:13]
+            if type == 'cf':
+                seqlistPAM = seqlist[0:4]
+                seqlistother = seqlist
+                seqlistother[0:4] = ['', '', '', '']
+                regPAM = regmean[0:4]
+            if type == 'cr':
+                seqlistPAM = seqlist[-4:]
+                seqlistother = seqlist
+                seqlistother[-4:] = ['', '', '', '']
+                regPAM = regmean[-4:]
+
+
             fig, (ax0, ax1) = plt.subplots(ncols=2, sharey=True, figsize=(16, 9))
             # ax0.bar(regmean.index, regmean, yerr=stdrr)
             ax0.bar(regmean.index, regmean, color='purple')
@@ -129,9 +182,15 @@ def plotpdf(groupinfo, refname, output, bamdir):
             ax0.errorbar(regmean.index, regmean, yerr=stdrr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None',
                          ecolor='black')
             ax0.set_title(namenow)
-            ax0.set_xticks(regmean.index)
-            ax0.set_xticklabels(seqlist)
-            ax0.tick_params(labelsize=8)
+
+            ax0.set_xticks(regmean.index, minor=True)
+            ax0.set_xticklabels(seqlistother, color="black", minor=True)  # minor=True表示次坐标轴
+            ax0.set_xticks(regPAM.index)
+            ax0.set_xticklabels(seqlistPAM, color="red")
+
+            # ax0.set_xticks(regmean.index)
+            # ax0.set_xticklabels(seqlist)
+            # ax0.tick_params(labelsize=8)
 
 
             ckname = namenow + ' Control'
@@ -139,9 +198,11 @@ def plotpdf(groupinfo, refname, output, bamdir):
             regck = mutateinforpdCK.loc[start:end]
             ax1.bar(regck.index, regck.delrate, color='grey')
             ax1.set_title(ckname)
-            ax1.set_xticks(regck.index)
-            ax1.set_xticklabels(seqlist)
-            ax1.tick_params(labelsize=8)
+            ax1.set_xticks(regck.index,minor=True)
+            ax1.set_xticklabels(seqlist,minor=True)
+            ax1.set_xticks(regPAM.index)
+            ax1.set_xticklabels(seqlistPAM, color="red")
+            #ax1.tick_params(labelsize=8)
             #     plt.show()
 
             plt.savefig(pdfname)

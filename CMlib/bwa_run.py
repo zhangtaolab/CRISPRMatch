@@ -5,6 +5,16 @@ from pyfasta import Fasta
 from subprocess import Popen
 
 def prepare(infofile, refname, output, bwabin, samtoolsbin, picardbin):
+    """
+
+    :param infofile: a description file of details of each sample, example: sample_infor.txt
+    :param refname: a fasta format of the sequence in the target region, exaple:Samples_gene.fa
+    :param output: folder of temporary files
+    :param bwabin: bwa bin path
+    :param samtoolsbin: samtools bin bath
+    :param picardbin: picard bin path
+    :return:
+    """
     datainfo=pd.read_table(infofile,index_col="Index")
     outputname = os.path.join(output, 'bwa_run.sh')
     documentdir = os.path.dirname(infofile)
