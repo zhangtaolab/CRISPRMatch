@@ -1,5 +1,6 @@
 # CRISPRMatch
-
+## Brief introduction
+An automatic calculation and visualization tool for high-throughput CRISPR genome-editing data analysis
 ## Requirements
 Anaconda</br>
 python3</br>
