@@ -22,15 +22,15 @@ $ conda install picard</br>
 *git clone https://github.com/zhangtaolab/CRISPRMatch.git*
 
 4. Files for mutation calculation  
-- File1: Genome-editing target sequences  
+- **File1**: Genome-editing target sequences  
 [Fasta format example](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/Samples_gene.fa)
-- File2: NGS samples information  
+- **File2**: NGS samples information  
 *note*:   
 For CRISPR-Cas9 system, the 'Note' must contain 'gRNA' label.  
 For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.  
 *example*:  
 [sample information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/sample_infor.txt)  
-- File3: NGS group information  
+- **File3**: NGS group information  
 *note*: At present, two repeats are supported<br></br>
 *example*:  
 [group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)
