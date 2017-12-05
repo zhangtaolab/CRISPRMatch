@@ -75,11 +75,14 @@ For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.
 [sample information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/sample_infor.txt)  
 - **File3**: NGS group information  
 *note*: At present, two repeats are supported<br>
-*example*:  
+*example*:</br>
 [group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)  
 **note**: the information files **File1**, **File2** and **File3** are required!  
 </br>
 2. command line example:</br>
+
 ```
 python CRISPRMatch.py -g document/Samples_gene.fa -i document/sample_infor.txt -gi document/group_info.txt
+```
+```aaa
 ```
