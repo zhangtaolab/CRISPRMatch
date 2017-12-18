@@ -12,6 +12,7 @@ from CMlib import mut_rate
 from CMlib import output_aln_fa
 from CMlib import plot_each_bam
 from CMlib import plot_pdf
+from CMlib import output_aln_pdf
 from subprocess import Popen
 from subprocess import PIPE
 import re
@@ -127,7 +128,11 @@ def main():
     print("plot pdf finished!")
     # end plot pdf
 
-
+    # # ?output aln and fa file
+    # print("## Step test:")
+    # output_aln_pdf.alnpdftest(args.input, args.result, args.genome,args.groupinfo)
+    # print("Alignment files were output!")
+    # # end output aln and fa file
 
 
 def check_options(parser):

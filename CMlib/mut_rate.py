@@ -23,6 +23,10 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
 
     info=pd.read_table(infofile,index_col="Index")
     groupinfor = pd.read_table(groupinfo)
+    #print(groupinfor)
+    #groupinfor = groupinfor.dropna(axis=0, how='any',thresh=7)  ##过滤表哥中没填满的行，thresh=7表示至少7个数不是NA
+    groupinfor.ix[:,pd.isnull(groupinfor).all()] = "UNKNOWN"
+    groupinfor=groupinfor.fillna("UNKNOWN") ##填充表格中NaN处
     stranddict = dict()
     for idy in groupinfor.index:
         stranddict[groupinfor.loc[idy].rep1] = groupinfor.loc[idy].strand
@@ -154,17 +158,20 @@ def display(groupinfo, output):
     mutfile = os.path.join(output, 'mut_rate.txt')
     mut_rate = pd.read_table(mutfile, sep='\t')
     groupinfor = pd.read_table(groupinfo)
-    groupinfor = groupinfor.dropna(axis=0, how='any',thresh=7)  ##过滤表哥中没填满的行，thresh=7表示至少7个数不是NA
+    groupinfor = groupinfor.dropna(axis=0, how='any',thresh=6)  ##过滤表哥中没填满的行，thresh=7表示至少7个数不是NA,控制treatment和CK至少有一个
     #groupinfor.ix[:,pd.isnull(groupinfor).all()] = "UNKNOWN"
     groupinfor=groupinfor.fillna("UNKNOWN") ##填充表格中NaN处
+    #print(groupinfor)
     mut_result = dict()
     for idx in mut_rate.index:
         mut_result[mut_rate.loc[idx].Sample] = mut_rate.values[idx]  ##读入mutation信息
     #    mut_result['OsPDS-RZ-gRNA1_Rep1'][2]
 
     ## prepare for display
-    replace = list()
-    replace_yerr = list()
+    #replace = list()
+    #replace_yerr = list()
+    mutation=list()
+    mutation_yerr = list()
     insertO = list()
     insertO_yerr = list()
     deletionO = list()
@@ -174,7 +181,7 @@ def display(groupinfo, output):
     glist = list()
     ck_glist = list()
 
-    ck_replace = list()
+    ck_mutation = list()
     ck_insertO = list()
     ck_deletionO = list()
     ck_insert_deletion = list()
@@ -182,44 +189,78 @@ def display(groupinfo, output):
         rep1 = groupinfor.loc[idy].rep1
         rep2 = groupinfor.loc[idy].rep2
         ck = groupinfor.loc[idy].control
-        replace_mean = np.mean([mut_result[rep1][2], mut_result[rep2][2]])  ##np.mean([1,2,3,4,5])
-        #    print(group_mean)
-        replace.append(replace_mean)
-        replace_std = np.std([mut_result[rep1][2], mut_result[rep2][2]])  ## 标准差
-        #    print("std", group_var)
-        replace_yerr.append(replace_std)
+        if (mut_result.__contains__(rep1) and mut_result.__contains__(rep2)):
+
+            # replace_mean = np.mean([mut_result[rep1][2], mut_result[rep2][2]])  ##np.mean([1,2,3,4,5])
+            # #    print(group_mean)
+            # replace.append(replace_mean)
+            # replace_std = np.std([mut_result[rep1][2], mut_result[rep2][2]])  ## 标准差
+            # #    print("std", group_var)
+            # replace_yerr.append(replace_std)
+            mutation_mean = np.mean([mut_result[rep1][1], mut_result[rep2][1]])  ##np.mean([1,2,3,4,5])
+            #    print(group_mean)
+            mutation.append(mutation_mean)
+            mutation_std = np.std([mut_result[rep1][1], mut_result[rep2][1]])  ## 标准差
+            #    print("std", group_var)
+            mutation_yerr.append(mutation_std)
+
+            insertO_mean = np.mean([mut_result[rep1][3], mut_result[rep2][3]])
+            insertO.append(insertO_mean)
+            insertO_std = np.std([mut_result[rep1][3], mut_result[rep2][3]])
+            insertO_yerr.append(insertO_std)
+
+            deletionO_mean = np.mean([mut_result[rep1][4], mut_result[rep2][4]])
+            deletionO.append(deletionO_mean)
+            deletionO_std = np.std([mut_result[rep1][4], mut_result[rep2][4]])
+            deletionO_yerr.append(deletionO_std)
+
+            insert_deletion_mean = np.mean([mut_result[rep1][5], mut_result[rep2][5]])
+            insert_deletion.append(insert_deletion_mean)
+            insert_deletion_std = np.std([mut_result[rep1][5], mut_result[rep2][5]])
+            insert_deletion_yerr.append(insert_deletion_std)
+        elif mut_result.__contains__(rep1):
+            print("The group:",groupinfor.loc[idy].group, ": Rep2 is missing.")
+            mutation.append(mut_result[rep1][1])
+            mutation_yerr.append(0)
+            insertO.append(mut_result[rep1][3])
+            insertO_yerr.append(0)
+            deletionO.append(mut_result[rep1][4])
+            deletionO_yerr.append(0)
+            insert_deletion.append(mut_result[rep1][5])
+            insert_deletion_yerr.append(0)
+        elif mut_result.__contains__(rep2):
+            print("The group:", groupinfor.loc[idy].group, ": Rep1 is missing.")
+            mutation.append(mut_result[rep2][1])
+            mutation_yerr.append(0)
+            insertO.append(mut_result[rep2][3])
+            insertO_yerr.append(0)
+            deletionO.append(mut_result[rep2][4])
+            deletionO_yerr.append(0)
+            insert_deletion.append(mut_result[rep2][5])
+            insert_deletion_yerr.append(0)
+        else:
+            print("All repetitions in group:", groupinfor.loc[idy].group, " is missing.")
+            mutation.append(0)
+            mutation_yerr.append(0)
+            insertO.append(0)
+            insertO_yerr.append(0)
+            deletionO.append(0)
+            deletionO_yerr.append(0)
+            insert_deletion.append(0)
+            insert_deletion_yerr.append(0)
 
         if ck=='UNKNOWN':
-            ck_replace.append(0)
-        else:
-            ck_replace.append(mut_result[ck][2])
-
-        insertO_mean = np.mean([mut_result[rep1][3], mut_result[rep2][3]])
-        insertO.append(insertO_mean)
-        insertO_std = np.std([mut_result[rep1][3], mut_result[rep2][3]])
-        insertO_yerr.append(insertO_std)
-        if(ck =='UNKNOWN'):
+            print("The group:",groupinfor.loc[idy].group, ": CK is missing.")
+            ck_mutation.append(0)
             ck_insertO.append(0)
-        else:
-            ck_insertO.append(mut_result[ck][3])
-
-        deletionO_mean = np.mean([mut_result[rep1][4], mut_result[rep2][4]])
-        deletionO.append(deletionO_mean)
-        deletionO_std = np.std([mut_result[rep1][4], mut_result[rep2][4]])
-        deletionO_yerr.append(deletionO_std)
-        if(ck=='UNKNOWN'):
             ck_deletionO.append(0)
-        else:
-            ck_deletionO.append(mut_result[ck][4])
-
-        insert_deletion_mean = np.mean([mut_result[rep1][5], mut_result[rep2][5]])
-        insert_deletion.append(insert_deletion_mean)
-        insert_deletion_std = np.std([mut_result[rep1][5], mut_result[rep2][5]])
-        insert_deletion_yerr.append(insert_deletion_std)
-        if(ck =='UNKNOWN'):
             ck_insert_deletion.append(0)
         else:
+            ck_mutation.append(mut_result[ck][1])
+            ck_insertO.append(mut_result[ck][3])
+            ck_deletionO.append(mut_result[ck][4])
             ck_insert_deletion.append(mut_result[ck][5])
+
 
         glist.append(groupinfor.loc[idy].group)
         ck_glist.append(groupinfor.loc[idy].control)
@@ -230,9 +271,9 @@ def display(groupinfo, output):
     fig, (ax0, ax1) = plt.subplots(ncols=2, sharey=True)
     fig.set_size_inches(20, 9)
     width = 0.15
-    bar1 = ax0.bar(groupinfor.index, replace, width, color="#CC79A7")
+    bar1 = ax0.bar(groupinfor.index, mutation, width, color="#CC79A7")
     #bar1 = ax0.bar(groupinfor.index, replace, width, color='pink', yerr=replace_yerr, elinewidth=0.1, capsize=1.5)
-    ax0.errorbar(groupinfor.index, replace, yerr=replace_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
+    ax0.errorbar(groupinfor.index, mutation, yerr=mutation_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
     bar2 = ax0.bar(groupinfor.index + width, insertO, width, color="#D55E00")
     #bar2 = ax0.bar(groupinfor.index + width, insertO, width, color='green', yerr=insertO_yerr, linewidth=0.5,capsize=1.5)
     ax0.errorbar(groupinfor.index+ width, insertO, yerr=insertO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
@@ -249,9 +290,9 @@ def display(groupinfo, output):
     ax0.set_xticks(groupinfor.index + 1.5 * width)
     #ax0.set_xticklabels(glist, rotation=35, size=6)
     ax0.set_xticklabels(glist, rotation=35, fontdict = {'family': 'Arial'}, size = 5)
-    ax0.legend((bar1[0], bar2[0], bar3[0], bar4[0]), ('replace', 'insert_only', 'deletion_only', 'insert&&deletion'))
+    ax0.legend((bar1[0], bar2[0], bar3[0], bar4[0]), ('mutation_all', 'insert_only', 'deletion_only', 'insert&&deletion'))
 
-    bar5 = ax1.bar(groupinfor.index, ck_replace, width, color="#CC79A7")
+    bar5 = ax1.bar(groupinfor.index, ck_mutation, width, color="#CC79A7")
     bar6 = ax1.bar(groupinfor.index + width, ck_insertO, width, color="#D55E00")
     bar7 = ax1.bar(groupinfor.index + width * 2, ck_deletionO, width, color="#0072B2")
     bar8 = ax1.bar(groupinfor.index + width * 3, ck_insert_deletion, width, color="#009E73")
@@ -261,7 +302,7 @@ def display(groupinfo, output):
     ax1.set_xticks(groupinfor.index + 1.5 * width)
     #ax1.set_xticklabels(ck_glist, rotation=35, size=6)
     ax1.set_xticklabels(ck_glist, rotation=35, fontdict = {'family': 'Arial'}, size = 5)
-    ax1.legend((bar5[0], bar6[0], bar7[0], bar8[0]), ('replace', 'insert_only', 'deletion_only', 'insert&&deletion'))
+    ax1.legend((bar5[0], bar6[0], bar7[0], bar8[0]), ('mutation_all', 'insert_only', 'deletion_only', 'insert&&deletion'))
     # plt.show()
     plt.savefig(mutfile, dpi=300, format="pdf")
     plt.close(fig)
