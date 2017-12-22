@@ -80,5 +80,6 @@ For CRISPR-Cpf1 system, the 'Note' must contain 'crRNA' label.
 2. command line example:</br>
 
 ```
-python CRISPRMatch.py -g document/Samples_gene.fa -i document/sample_infor.txt -gi document/group_info.txt
+$ cd /home/software/CRISPRMatch/
+$ python3 CRISPRMatch.py -g sampledata/Samples_gene.fa -i sampledata/sample_infor.txt -gi sampledata/group_info.txt
 ```

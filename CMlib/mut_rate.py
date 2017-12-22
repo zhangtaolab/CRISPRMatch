@@ -79,9 +79,11 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
         #    end = info.loc[idx].end
         gene = info.loc[idx].gene_name
         samfile = pysam.AlignmentFile(bamname, "rb", check_sq=False)
+        #print(samfile.count())
         mtreads = set()
         totalcov = 0
-        covage = 0
+        #covage = samfile.count()/100
+        covage = set()
 
         replace = set()
 
@@ -99,13 +101,14 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
 
             # print (pileupcolumn.pos, pileupcolumn.n)  pos代表该位点的坐标，n代表它的coverage,pileups代表对应的reads
 
-
-
             totalcov += pileupcolumn.n
 
             if end >= pileupcolumn.pos >= start:
 
+
                 for pileupread in pileupcolumn.pileups:
+
+                    covage.add(pileupread.alignment.query_name)
 
                     if not pileupread.is_del and not pileupread.is_refskip:
                         #             print(pileupread.query_position)
@@ -136,12 +139,20 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
         insert_deletion = insert & deletion
         insert_only = insert - deletion
         deletion_only = deletion - insert
+        # print(info.loc[idx].Note, end='\t', file=outio)
+        # print(len(mtreads)/500, end='\t', file=outio)
+        # print(len(replace)/500, end='\t', file=outio)
+        # print(len(insert_only)/500, end='\t', file=outio)
+        # print(len(deletion_only)/500, end='\t', file=outio)
+        # print(len(insert_deletion)/500, end='\n', file=outio)
+
+        #print(len(covage))
         print(info.loc[idx].Note, end='\t', file=outio)
-        print(len(mtreads)/500, end='\t', file=outio)
-        print(len(replace)/500, end='\t', file=outio)
-        print(len(insert_only)/500, end='\t', file=outio)
-        print(len(deletion_only)/500, end='\t', file=outio)
-        print(len(insert_deletion)/500, end='\n', file=outio)
+        print(len(mtreads)/len(covage)*100, end='\t', file=outio)
+        print(len(replace)/len(covage)*100, end='\t', file=outio)
+        print(len(insert_only)/len(covage)*100, end='\t', file=outio)
+        print(len(deletion_only)/len(covage)*100, end='\t', file=outio)
+        print(len(insert_deletion)/len(covage)*100, end='\n', file=outio)
 
         # print(info.loc[idx].Note.'\t'.len(mtreads)/500,len(replace)/500,'\t',len(insert_only)/500,'\t',len(deletion_only)/500,'\t',len(insert_deletion)/500, file=outio)
         # print(info.loc[idx].Note, len(mtreads)/500, len(replace)/500, len(insert)/500, len(deletion)/500 )
@@ -274,12 +285,12 @@ def display(groupinfo, output):
     bar1 = ax0.bar(groupinfor.index, mutation, width, color="#CC79A7")
     #bar1 = ax0.bar(groupinfor.index, replace, width, color='pink', yerr=replace_yerr, elinewidth=0.1, capsize=1.5)
     ax0.errorbar(groupinfor.index, mutation, yerr=mutation_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
-    bar2 = ax0.bar(groupinfor.index + width, insertO, width, color="#D55E00")
+    bar2 = ax0.bar(groupinfor.index + width, deletionO, width, color="#D55E00")
     #bar2 = ax0.bar(groupinfor.index + width, insertO, width, color='green', yerr=insertO_yerr, linewidth=0.5,capsize=1.5)
-    ax0.errorbar(groupinfor.index+ width, insertO, yerr=insertO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
+    ax0.errorbar(groupinfor.index+ width, deletionO, yerr=deletionO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5, ls='None', ecolor='black')
     #bar3 = ax0.bar(groupinfor.index + width * 2, deletionO, width, color='blue', yerr=deletionO_yerr, linewidth=0.5,capsize=1.5)
-    bar3 = ax0.bar(groupinfor.index + width * 2, deletionO, width, color="#0072B2")
-    ax0.errorbar(groupinfor.index + width * 2, deletionO, yerr=deletionO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5,ls='None', ecolor='black')
+    bar3 = ax0.bar(groupinfor.index + width * 2, insertO, width, color="#0072B2")
+    ax0.errorbar(groupinfor.index + width * 2, insertO, yerr=insertO_yerr, fmt='', elinewidth=0.5, capsize=2, capthick=0.5,ls='None', ecolor='black')
     bar4 = ax0.bar(groupinfor.index + width * 3, insert_deletion, width, color="#009E73")
     #bar4 = ax0.bar(groupinfor.index + width * 3, insert_deletion, width, color='orange', yerr=insert_deletion_yerr,linewidth=0.5, capsize=1.5)
     ax0.errorbar(groupinfor.index + width * 3, insert_deletion, yerr=insert_deletion_yerr, fmt='', elinewidth=0.5, capsize=2,capthick=0.5,ls='None', ecolor='black')
@@ -290,11 +301,11 @@ def display(groupinfo, output):
     ax0.set_xticks(groupinfor.index + 1.5 * width)
     #ax0.set_xticklabels(glist, rotation=35, size=6)
     ax0.set_xticklabels(glist, rotation=35, fontdict = {'family': 'Arial'}, size = 5)
-    ax0.legend((bar1[0], bar2[0], bar3[0], bar4[0]), ('mutation_all', 'insert_only', 'deletion_only', 'insert&&deletion'))
+    ax0.legend((bar1[0], bar2[0], bar3[0], bar4[0]), ('mutation_all', 'deletion_only', 'insert_only','insert&&deletion'))
 
     bar5 = ax1.bar(groupinfor.index, ck_mutation, width, color="#CC79A7")
-    bar6 = ax1.bar(groupinfor.index + width, ck_insertO, width, color="#D55E00")
-    bar7 = ax1.bar(groupinfor.index + width * 2, ck_deletionO, width, color="#0072B2")
+    bar6 = ax1.bar(groupinfor.index + width, ck_deletionO, width, color="#D55E00")
+    bar7 = ax1.bar(groupinfor.index + width * 2, ck_insertO, width, color="#0072B2")
     bar8 = ax1.bar(groupinfor.index + width * 3, ck_insert_deletion, width, color="#009E73")
     # ax.bar(reg.index, reg.delrate, color='blue')
     ax1.set_title('Control', size=15,fontdict = {'family': 'Times New Roman'})
@@ -302,7 +313,7 @@ def display(groupinfo, output):
     ax1.set_xticks(groupinfor.index + 1.5 * width)
     #ax1.set_xticklabels(ck_glist, rotation=35, size=6)
     ax1.set_xticklabels(ck_glist, rotation=35, fontdict = {'family': 'Arial'}, size = 5)
-    ax1.legend((bar5[0], bar6[0], bar7[0], bar8[0]), ('mutation_all', 'insert_only', 'deletion_only', 'insert&&deletion'))
+    ax1.legend((bar5[0], bar6[0], bar7[0], bar8[0]), ('mutation_all', 'deletion_only', 'insert_only', 'insert&&deletion'))
     # plt.show()
     plt.savefig(mutfile, dpi=300, format="pdf")
     plt.close(fig)
