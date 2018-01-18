@@ -66,19 +66,19 @@ def main():
     # ?Build Gene_fasta index
 
     if bwabuild:
-
+    
         bwa.bwaindex(args.bwa, args.genome, args.saved)
         print("## Step 1:")
-
+    
         print("bwa index build finished ...")
-
+    
     else:
-
+    
         print("Use", bwatestindex)
-
-
+    
+    
     print("bwa index finshed!!")
-
+    
     # ?run bwa alignment
     print("## Step 2:")
     print("loading fastq files...!")
@@ -105,22 +105,22 @@ def main():
     output_aln_fa.alnfile(args.input, args.groupinfo, args.genome, args.result, args.saved)
     print("Alignment files were output!")
     # end output aln and fa file
-
-
+    
+    
     # ?output aln figure
     print("Starting to plot each alignment...")
     output_aln_fa.alnpdf(args.input, args.result)
     print("Alignment figures were done!")
     # end output aln figure
-
-
+    
+    
     # ?plot each bam
     print("## Step 5:")
     print("Starting to plot each bam...")
     plot_each_bam.barchart(args.input, args.groupinfo,args.genome, args.result, args.saved)
     print("plot each bam finished!")
     # end plot each bam
-
+    
     # ?plot pdf
     print("## Step 6:")
     print("Starting to plot pdf...")

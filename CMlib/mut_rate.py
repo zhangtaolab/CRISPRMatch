@@ -91,6 +91,8 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
 
         deletion = set()
 
+        mthreads_all = set()
+
         insert_deletion = set()
 
         insert_only = set()
@@ -129,16 +131,19 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
                         #                     insert += 1
                         mtreads.add(pileupread.alignment.query_name)
                         insert.add(pileupread.alignment.query_name)
+                        mthreads_all.add(pileupread.alignment.query_name)
 
                     if pileupread.indel < 0:
                         #                     deletion += 1
                         mtreads.add(pileupread.alignment.query_name)
                         deletion.add(pileupread.alignment.query_name)
+                        mthreads_all.add(pileupread.alignment.query_name)
 
                         #         print(pileupcolumn.pos, pileupcolumn.n, replace, insert, deletion)
         insert_deletion = insert & deletion
         insert_only = insert - deletion
         deletion_only = deletion - insert
+        #mthreads_all = mtreads - replace
         # print(info.loc[idx].Note, end='\t', file=outio)
         # print(len(mtreads)/500, end='\t', file=outio)
         # print(len(replace)/500, end='\t', file=outio)
@@ -148,7 +153,8 @@ def rate_cal(infofile, groupinfo, refname, output, bamdir):
 
         #print(len(covage))
         print(info.loc[idx].Note, end='\t', file=outio)
-        print(len(mtreads)/len(covage)*100, end='\t', file=outio)
+        #print(len(mtreads)/len(covage)*100, end='\t', file=outio)
+        print(len(mthreads_all)/len(covage) * 100, end='\t', file=outio)
         print(len(replace)/len(covage)*100, end='\t', file=outio)
         print(len(insert_only)/len(covage)*100, end='\t', file=outio)
         print(len(deletion_only)/len(covage)*100, end='\t', file=outio)

@@ -17,7 +17,7 @@ def prepare(infofile, refname, output, bwabin, samtoolsbin, picardbin):
     """
     datainfo=pd.read_table(infofile,index_col="Index")
     outputname = os.path.join(output, 'bwa_run.sh')
-    documentdir = os.path.dirname(infofile)
+    documentdir = os.path.dirname(os.path.abspath(infofile))
     outio = open(outputname,"w")
     for idx in datainfo.index:
         fqname = documentdir+'/'+datainfo.ix[idx]['Sample']+'/'+datainfo.ix[idx]['Sample']+'.extendedFrags.fastq'
