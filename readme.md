@@ -9,7 +9,7 @@ samtools</br>
 picard</br>
 FLASH</br>
 
-* **<font color=red>Note:</font>** Using `Anaconda` to Install all packages (`bwa,samtools,picard,FLASH`)
+![#f03c15](https://placehold.it/15/f03c15/000000?text=+) **<font color=red>Note:</font>** Using `Anaconda` to Install all packages (`bwa,samtools,picard,FLASH`)
 
 ## II. <u>Manually Install</u>
 CentOS Linux release 7.3.1611 (terminal)
@@ -33,7 +33,7 @@ $ conda install bwa \
                 argparse \  
                 numpy \
 ```
-* **<font color=red>Note:</font>** To ensure the tool working, please using `Anaconda` to install all packages (`bwa,samtools,picard,FLASH ...`)
+![#f03c15](https://placehold.it/15/f03c15/000000?text=+) **<font color=red>Note:</font>** To ensure the tool working, please using `Anaconda` to install all packages (`bwa,samtools,picard,FLASH ...`)
 3. Download CRISPRMatch and test
 ```
 $ cd /home/software
@@ -73,16 +73,16 @@ $ python3 /home/software/CRISPRMatch/CRISPRMatch.py -h
 - **File1**: Genome-editing target sequences  
 [Fasta format example](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/Samples_gene.fa)
 - **File2**: NGS samples information  
-<font color=red>*note*:</font>   
+![#f03c15](https://placehold.it/15/f03c15/000000?text=+) <font color=red>*note*:</font>   
 For CRISPR-Cas9 system, the `'Note'` must contain `'gRNA'` label.  
 For CRISPR-Cpf1 system, the `'Note'` must contain `'crRNA'` label.  
 *example*:  
 [sample information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/sample_infor.txt)  
 - **File3**: NGS group information  
-<font color=red>*note*:</font> At present, two repeats are supported<br>
+![#f03c15](https://placehold.it/15/f03c15/000000?text=+) <font color=red>*note*:</font> At present, two repeats are supported<br>
 *example*:</br>
 [group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)  
-- **note**: the information files `File1`, `File2` and `File3` are required!  
+- **Note**: the information files `File1`, `File2` and `File3` are required!  
 </br>
 2. command line example:</br>
 
@@ -92,22 +92,14 @@ For CRISPR-Cpf1 system, the `'Note'` must contain `'crRNA'` label.
 $ cd /home/software/CRISPRMatch/
 $ python3 CRISPRMatch.py -g sampledata/Samples_gene.fa -i sampledata/sample_infor.txt -gi sampledata/group_info.txt -t 2
 ```
-* <font color=red>**Note**</font>: absolute path is preferred when using customer data
-
+```diff
+- Note: absolute path is preferred when using customer data
+```
 > (2) For paired-end reads
 ```
 $ cd /home/software/CRISPRMatch/
 $ python3 CRISPRMatch_paired.py -g sampledata2/Samples_gene.fa -i sampledata2/sample_infor.txt -gi sampledata2/group_info.txt -t 2
 ```
-```html
-<span style="color:red">**Note**</font>: absolute path is preferred when using customer data
-```
-
-- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) `#f03c15`
-- ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) `#c5f015`
-- ![#1589F0](https://placehold.it/15/1589F0/000000?text=+) `#1589F0`
-
 ```diff
-+ this will be highlighted in green
-- this will be highlighted in red
+- Note: absolute path is preferred when using customer data
 ```
