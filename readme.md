@@ -1,7 +1,7 @@
 # CRISPRMatch
-## I. <u>Brief introduction</u>
+## Brief introduction
 An automatic calculation and visualization tool for high-throughput CRISPR genome-editing data analysis
-## Requirements
+## I. <u>Requirements</u>
 Anaconda</br>
 python3</br>
 bwa</br>
@@ -85,17 +85,18 @@ For CRISPR-Cpf1 system, the `'Note'` must contain `'crRNA'` label.
 - **note**: the information files `File1`, `File2` and `File3` are required!  
 </br>
 2. command line example:</br>
+
 > (1) For single long reads
 
 ```
 $ cd /home/software/CRISPRMatch/
 $ python3 CRISPRMatch.py -g sampledata/Samples_gene.fa -i sampledata/sample_infor.txt -gi sampledata/group_info.txt -t 2
 ```
-* <font color=red>Note</font>: absolute path is preferred when using customer data
+* <font color=red>**Note**</font>: absolute path is preferred when using customer data
 
 > (2) For paired-end reads
 ```
 $ cd /home/software/CRISPRMatch/
 $ python3 CRISPRMatch_paired.py -g sampledata2/Samples_gene.fa -i sampledata2/sample_infor.txt -gi sampledata2/group_info.txt -t 2
 ```
-* <font color=red>Note</font>: absolute path is preferred when using customer data
+* <font color=red>**Note**</font>: absolute path is preferred when using customer data
