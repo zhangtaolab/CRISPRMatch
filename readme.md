@@ -33,7 +33,8 @@ $ conda install bwa \
                 argparse \  
                 numpy \
 ```
-![#f03c15](https://placehold.it/15/f03c15/000000?text=+) **<font color=red>Note:</font>** To ensure the tool working, please using `Anaconda` to install all packages (`bwa,samtools,picard,FLASH ...`)
+- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) **<font color=red>Note:</font>** To ensure the tool working, please using `Anaconda` to install all packages (`bwa,samtools,picard,FLASH ...`)
+
 3. Download CRISPRMatch and test
 ```
 $ cd /home/software
