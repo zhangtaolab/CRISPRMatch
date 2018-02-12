@@ -4,7 +4,7 @@ import pandas as pd
 from pyfasta import Fasta
 from subprocess import Popen
 
-def prepare(infofile, refname, output, bwabin, samtoolsbin, picardbin):
+def prepare(infofile, refname, output, bwabin, samtoolsbin, picardbin, threadnumber):
     """
 
     :param infofile: a description file of details of each sample, example: sample_infor.txt
@@ -22,8 +22,9 @@ def prepare(infofile, refname, output, bwabin, samtoolsbin, picardbin):
     for idx in datainfo.index:
         fqname = documentdir+'/'+datainfo.ix[idx]['Sample']+'/'+datainfo.ix[idx]['Sample']+'.extendedFrags.fastq'
         bamfile = datainfo.ix[idx]['Note'] + '.bam'
-        print(bwabin,' mem ', os.path.basename(refname), ' ', fqname, ' | ',picardbin,' SortSam I=/dev/stdin O=', bamfile,
-              ' SO=coordinate', sep='', file=outio)
+        print(bwabin,' mem -t ', str(threadnumber), ' ',os.path.basename(refname), ' ', fqname, ' | ',picardbin,' SortSam I=/dev/stdin O=', bamfile, ' SO=coordinate', sep='', file=outio)
+        # print(bwabin,' mem ', os.path.basename(refname), ' ', fqname, ' | ',picardbin,' SortSam I=/dev/stdin O=', bamfile,
+        #       ' SO=coordinate', sep='', file=outio)
         print(samtoolsbin,' index ',bamfile, file=outio)
         #print('bwa mem ', os.path.basename(refname), ' ', fqname, ' | picard SortSam I=/dev/stdin O=', bamfile, ' SO=coordinate', sep='',
         #      file=outio)

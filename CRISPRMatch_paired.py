@@ -5,6 +5,7 @@ import os
 import os.path
 from pyfasta import Fasta
 import pandas as pd
+from CMlib import flash_run
 from CMlib import bwa_run
 from CMlib import mut_rate
 from CMlib import output_aln_fa
@@ -24,7 +25,12 @@ def main():
 
     bwaindex = os.path.join(args.saved, bwaindexfile)
 
-
+    # ?mutation ration calculation
+    print("## Step 0:")
+    print("Merging paired reads...")
+    flash_run.flash_merge(args.flash, args.input, args.saved, args.threads)
+    print("Mutation calculation finished!")
+    # end mutation
 
 
     bwabuild = True
