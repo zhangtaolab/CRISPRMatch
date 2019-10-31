@@ -72,17 +72,17 @@ $ python3 /home/software/CRISPRMatch/CRISPRMatch.py -h
 ## III. <u>Start running</u>
 1. Files for mutation calculation  
 - **File1**: Genome-editing target sequences  
-[Fasta format example](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/Samples_gene.fa)
+[Fasta format example](https://github.com/zhangtaolab/CRISPRMatch/blob/master/sampledata/Samples_gene.fa)
 - **File2**: NGS samples information  
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) <font color=red>*note*:</font>   
 For CRISPR-Cas9 system, the `'Note'` must contain `'gRNA'` label.  
 For CRISPR-Cpf1 system, the `'Note'` must contain `'crRNA'` label.  
 *example*:  
-[sample information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/sample_infor.txt)  
+[sample information](https://github.com/zhangtaolab/CRISPRMatch/blob/master/sampledata/sample_infor.txt)  
 - **File3**: NGS group information  
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) <font color=red>*note*:</font> At present, two repeats are supported<br>
 *example*:</br>
-[group information](https://github.com/zhangtaolab/CRISPRMatch/tree/master/document/group_info.txt)  
+[group information](https://github.com/zhangtaolab/CRISPRMatch/blob/master/sampledata/group_info.txt)  
 - **Note**: the information files `File1`, `File2` and `File3` are required!  
 </br>
 2. command line example:</br>
