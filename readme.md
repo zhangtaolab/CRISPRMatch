@@ -1,4 +1,7 @@
 # CRISPRMatch
+
+## We release new CRIPSR data analysis software: [https://bioinfor.yzu.edu.cn/software/crisprstitch ](https://zhangtaolab.org/software/crisprstitch). 
+
 ## Brief introduction
 An automatic calculation and visualization tool for high-throughput CRISPR genome-editing data analysis
 ## I. <u>Requirements</u>
