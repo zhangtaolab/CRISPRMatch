@@ -1,5 +1,5 @@
 # CRISPRMatch
-
+## CRISPRMatch is no longer actively maintained.
 ## We release new CRIPSR data analysis software: [CrisprStitch](https://zhangtaolab.org/software/crisprstitch). 
 
 ## Brief introduction
